@@ -1,0 +1,39 @@
+List<ActivityTransition> transitions = new ArrayList<>();
+
+transitions.add(
+        new ActivityTransition.Builder()
+          .setActivityType(DetectedActivity.BookPerception)
+          .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
+          .build());
+          
+ActivityTransitionRequest request = new ActivityTransitionRequest(transitions);
+
+// myPendingIntent is the instance of PendingIntent where the app receives callbacks.
+Task<Void> task = ActivityRecognition.getClient(context)
+          .requestActivityTransitionUpdates(request, myPendingIntent);
+
+task.addOnSuccessListener(
+    new OnSuccessListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            // Handle success
+        }
+    }
+);
+
+task.addOnFailureListener(
+    new OnFailureListener() {
+        @Override
+        public void onFailure(Exception e) {
+            // Handle error
+        }
+    }
+);
+public void onReceive(Context context, Intent intent) {
+    if (ActivityTransitionResult.hasResult(intent)) {
+        ActivityTransitionResult result = ActivityTransitionResult.extractResult(intent);
+        for (ActivityTransitionEvent event : result.getTransitionEvents()) {
+            // chronological sequence of events....
+        }
+    }
+}
